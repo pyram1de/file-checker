@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Image File Status</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="css/styles.css" rel="stylesheet">
+
+	</head>
+	<body>
+  <% for(var i=0;calculations.length>i;i++) { %>
+<div id="myHeader<%=i%>" class="header" style="<%=calculations[i].style%>">
+  <div class="container">    
+    <h2><%=calculations[i].server%></h2>
+    <h3><%=calculations[i].calculationName%></h3>
+      <p class="lead" id="currentStatus<%=i%>"><%= calculations[i].currentStatus%></p>
+      <p>Expected File count: <span id="expectedFileCount<%=i%>"><%=calculations[i].expectedFileCount%></span></p>
+      <p><span id="percentage<%=i%>"><%= calculations[i].percentage %></span>% complete</p>
+      <p id="estTime<%=i%>" style="display:none;">estimated time left <span id="estTimeLeft<%=i%>"></span></p>
+      <p id="upCount<%=i%>"></p>      
+      <div>&nbsp;</div>
+  </div>
+</div>
+<div style="min-height: 6px;background:#f0f9ef;margin:0;padding:0;border-bottom: solid 1px black;border-top:solid 1px black;"><div id="percentComplete<%=i%>" style="margin:0;padding:0;height:6px;width:<%=calculations[i].percentage%>%;background:#478242"></div></div>
+<% } %>
+	<!-- script references -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/scripts.js"></script>
+    <script>
+    
+      $(document).ready(function(){
+        setInterval(function(){
+          $.get("/update", function(data){ 
+            var calculations = data.calculations;
+            for(var i=0;calculations.length>i;i++) {
+              var refreshCount = calculations[i].pollTime;                             
+              $('#percentage'+i).text(calculations[i].percentage);
+              $('#exectedFileCount'+i).text(calculations[i].expectedFileCount);
+              $('#currentStatus'+i).text(calculations[i].currentStatus);
+              $('#myHeader'+i).attr('style',calculations[i].style);
+              $('#percentComplete'+i).attr('style',"margin:0;padding:0;height:6px;background:#478242;width:"+calculations[i].percentage+"%;");              
+              var upCount = calculations[i].currentNumber-calculations[i].previousNumber;
+              console.log(upCount);
+              if(upCount>0){
+                  var number = Math.max(Math.ceil(upCount/5),1);          
+                  $('#upCount'+i).attr('style',"display:block;color:green;font-size: large;font-weight: bold;");
+                  $('#upCount'+i).text(Array(number).join("+") + " " + (calculations[i].currentNumber-calculations[i].previousNumber));
+              } else {
+                  $('#upCount'+i).attr('style',"display: none;color:grey: font-size: small");
+              }
+              if(calculations[i].percentage<100&&upCount>0){
+                $('#estTime'+i).attr('style','display:block');
+                  var numberLeft = calculations[i].expectedFileCount - calculations[i].currentNumber;
+                  var secondsPerOne = (refreshCount / 1000) / upCount;
+                  var secondsLeft = secondsPerOne * numberLeft;
+                  var minutesLeft = Math.round(secondsLeft / 60,0);
+                  var calcMinsLeft = minutesLeft%60;
+                  var hoursLeft = Math.round((minutesLeft-calcMinsLeft)/60,0);
+                  var output = hoursLeft+" hours "+calcMinsLeft+" minutes";
+                  $('#estTimeLeft'+i).text(output);
+              } else {
+                $('#estTime'+i).attr('style','display:none');
+              }
+              
+            }            
+          });
+        },3500);
+        
+      });
+    </script>
+	</body>
+</html>

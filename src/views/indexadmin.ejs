@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Image File Status</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="css/styles.css" rel="stylesheet">
+
+	</head>
+	<body>
+  <% for(var i=0;calculations.length>i;i++) { %>
+<div id="myHeader" class="header" style="<%=calculations[i].style%>">
+  <div class="container">    
+    <h2><%=calculations[i].server%></h2>
+    <h3><a href="admin/<%=calculations[i]._id%>"><%=calculations[i].calculationName%></a></h3>
+      <p class="lead" id="currentStatus"><%= calculations[i].currentStatus%></p>
+      <p>Expected File count: <span id="expectedFileCount"><%=calculations[i].expectedFileCount%></span></p>
+      <p>Current File count: <span id="expectedFileCount"><%=calculations[i].currentNumber%></span></p>
+      <p><span id="percentage"><%= Math.round((calculations[i].currentNumber / calculations[i].expectedFileCount) * 100,2) %></span>% complete</p>
+      <div>&nbsp;</div>
+  </div>
+</div>
+<% } %>
+	<!-- script references -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/scripts.js"></script>
+    <script>
+    
+      $(document).ready(function(){
+        setInterval(function(){
+          location.reload();
+          $.get("/update", function(data){          
+            $('#percentage').text(data.percentage);
+            $('#exectedFileCount').text(data.exectedFileCount);
+            $('#currentStatus').text(data.currentStatus);
+            $('#myHeader').attr('style',data.style);
+          });
+        },4000)
+        
+      });
+    </script>
+	</body>
+</html>

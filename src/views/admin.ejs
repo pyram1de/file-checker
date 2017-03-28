@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Image File Status</title>
+		<meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="/css/styles.css" rel="stylesheet">
+	</head>
+	<body>
+<div class="header vert" style="height:100%;background-color:silver;" >
+  <div class="container">    
+			<form type="submit" action="admin" method="POST">
+				<div class="form-group">
+					<label for="expectedCount">Expected Count</label>
+					<input type="text" class="form-control" name="expectedCount" value="<%=calculation.expectedFileCount%>">
+				</div>
+				<div class="form-group">
+					<label for="calculationName">Calculation Name</label>
+					<input type="text" class="form-control" name="calculationName" value="<%=calculation.calculationName%>">
+				</div>
+				<div class="form-group">
+					<label for="location">Location</label>
+					<input type="text" class="form-control" name="location" value="<%=calculation.location%>">
+				</div>
+				<div class="form-group">
+					<label for="server">Server</label>
+					<input type="text" class="form-control" name="server" value="<%=calculation.server%>">
+				</div>				
+				<div class="form-group">
+					<label for="server">Poll Time</label>
+					<input type="text" class="form-control" name="pollTime" value="<%=calculation.pollTime%>">
+				</div>					
+				<div class="form-group">
+					<label for="server">Previous Number</label>
+					<input type="text" class="form-control" name="previousNumber" value="<%=calculation.previousNumber%>">
+				</div>
+				<div class="form-group">
+					<label for="server">Tick Threshold</label>
+					<input type="text" class="form-control" name="threshold" value="<%=calculation.threshold%>">
+				</div>
+				<input type="hidden" name="id" value="<%=calculation._id%>">
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+  </div>
+</div>
+	<!-- script references -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+		<script src="/js/scripts.js"></script>
+	</body>
+</html>
